@@ -11,9 +11,9 @@ Use Kinect xbox 360 to achieve a low cost motion capture system.
 5. Export motion capture to 'BVH' format.
 
 ### Support systems:
-macOS
-Linux
-Windows.
+1. macOS
+2. Linux
+3. Windows.
 
 ### Usage:
 1. Plug the Kinect xbox 360 device into the USB port.

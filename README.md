@@ -3,15 +3,17 @@ Kinect motion capture (Mocap) research project by color tracking.
 
 Use Kinect xbox 360 to achieve a low cost motion capture system.
 
-### Features
+### Features:
 1. Locate joints directly by color tracking.
 2. Global optimized solution for color tracking.
 3. Mixture gaussian model for color tracking.
 4. Turn body around in 360 degrees freely.
 5. Export motion capture to 'BVH' format.
 
-### Support system
-macOS, Linux, Windows.
+### Support systems:
+macOS
+Linux
+Windows.
 
 ### Usage:
 1. Plug the Kinect xbox 360 device into the USB port.
@@ -24,5 +26,5 @@ macOS, Linux, Windows.
 8. Press 'ESC' to exit.
 
 ### To do:
-1. The hip center and the neck are difficult to mark colors.
-2. Hard code color table.
+1. The hip center and the neck are difficult to mark colors, generate their positions automatically.
+2. Load basic color table from file other than hard coding.

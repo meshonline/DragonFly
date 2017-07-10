@@ -1,3 +1,4 @@
+![](mocap.png)
 ![](wrist-bands.png)
 # DragonFly
 Kinect motion capture (Mocap) research project by color tracking.

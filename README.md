@@ -1,3 +1,4 @@
+![](wrist-bands.png)
 # DragonFly
 Kinect motion capture (Mocap) research project by color tracking.
 
@@ -20,7 +21,7 @@ The project is not mature at present, play it around at your own risk.
 ### Features:
 1. Locate positions of all joints directly by color tracking.
 2. Global optimized solution for color tracking.
-3. Mixture gaussian model for color tuning.
+3. Mixture gaussian model for color learning.
 4. Freely turn around your body in 360 degrees.
 5. Export motion capture data to 'bvh' format.
 

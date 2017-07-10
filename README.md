@@ -1,7 +1,7 @@
-![](mocap.png)
-![](wrist-bands.png)
 # DragonFly
 Kinect motion capture (Mocap) research project by color tracking.
+
+![](mocap.png)
 
 I'm studing how to use Kinect xbox 360 to achieve a low cost motion capture system.
 
@@ -10,6 +10,8 @@ I use both color and depth information to locate the space positions of all join
 The algorithm does not use any statistic idea, so the positions of all joints are accurate.
 
 I use wrist bands (13 colors) to mark colors for joints, they had only costed me five dollars.
+
+![](wrist-bands.png)
 
 I recommend that you put the light source near the camera, and let it lighten your body from the camera's view.
 

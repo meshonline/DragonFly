@@ -1,14 +1,28 @@
 # DragonFly
 Kinect motion capture (Mocap) research project by color tracking.
 
-Use Kinect xbox 360 to achieve a low cost motion capture system.
+I'm studing how to use Kinect xbox 360 to achieve a low cost motion capture system.
+
+I use both color and depth information to locate the space positions of all joints.
+
+The algorithm does not use any statistic idea, so the positions of all joints are accurate.
+
+I use wrist bands (13 colors) to mark colors for joints, they had only costed me five dollars.
+
+I recommend that you put the light source near the camera, and let it lighten your body from the camera's view.
+
+You must take a photo on these wrist bands, than write down their hues, satuations and values, gimp or other image editors can help you, then you must hard code the hues, satuations, values into the basic color table.
+
+To fine tune the colors to fit your own light source, you can use the built-in color learning function to tune the colors.
+
+The project is not mature at present, play it around at your own risk.
 
 ### Features:
-1. Locate joints directly by color tracking.
+1. Locate positions of all joints directly by color tracking.
 2. Global optimized solution for color tracking.
-3. Mixture gaussian model for color tracking.
-4. Turn body around in 360 degrees freely.
-5. Export motion capture to 'BVH' format.
+3. Mixture gaussian model for color tuning.
+4. Freely turn around your body in 360 degrees.
+5. Export motion capture data to 'bvh' format.
 
 ### Support systems:
 1. macOS
@@ -26,5 +40,4 @@ Use Kinect xbox 360 to achieve a low cost motion capture system.
 8. Press 'ESC' to exit.
 
 ### To do:
-1. The hip center and the neck are difficult to mark colors, generate their positions automatically.
-2. Load basic color table from file other than hard coding.
+The hip center and the neck are difficult to mark colors.

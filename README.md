@@ -25,10 +25,10 @@ The project is not mature at present, play it around at your own risk.
 
 ### Features:
 1. Locate positions of all joints directly by color tracking.
-2. Global optimized solution for color tracking.
+2. Global optimal solution for color tracking.
 3. Mixture gaussian model for color learning.
 4. Freely turn around your body in 360 degrees.
-5. Export motion capture data to 'bvh' format automatically.
+5. Export motion capture data to 'BVH' format automatically.
 
 ### Support systems:
 1. macOS
@@ -42,10 +42,9 @@ The project is not mature at present, play it around at your own risk.
 4. Mark joints with different colors.
 5. Plug the Kinect xbox 360 device into the USB port.
 6. Build and run.
-7. [Optional]Fine tune the colors.
-   Press 'l' key to switch the mode, 'Up' and 'Down' arrow key to change the color.
+7. [Optional]Fine tune the colors. Press 'l' key to switch the mode, 'Up' and 'Down' arrow keys to change the color.
 8. Perform actions.
-9. Press 'esc' key to exit.
+9. Press 'Esc' key to exit.
 
 ### To do:
 1. [Solved]The hip center and the neck are difficult to mark colors, consider to generate them automatically.

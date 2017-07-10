@@ -15,9 +15,11 @@ I use wrist bands (13 colors) to mark colors for joints, they had only costed me
 
 I recommend that you put the light source near the camera, and let it lighten your body from the camera's view.
 
-You must take a photo on these wrist bands, than write down their hues, satuations and values, gimp or other image editors can help you, then you must hard code the hues, satuations, values into the basic color table.
+You must take a photo on these wrist bands, than write down their hues, satuations and values, you may use gimp to get the information.
 
-To fine tune the colors to fit your own light source, you can use the built-in color learning function to tune the colors.
+Then you must modify 'colortrack.h', fill your colors into the color table manually.
+
+To fine tune the colors to fit your light source, you can use the built-in color learning function to fine tune the colors.
 
 The project is not mature at present, play it around at your own risk.
 
@@ -26,7 +28,7 @@ The project is not mature at present, play it around at your own risk.
 2. Global optimized solution for color tracking.
 3. Mixture gaussian model for color learning.
 4. Freely turn around your body in 360 degrees.
-5. Export motion capture data to 'bvh' format.
+5. Export motion capture data to 'bvh' format automatically.
 
 ### Support systems:
 1. macOS
@@ -34,14 +36,17 @@ The project is not mature at present, play it around at your own risk.
 3. Windows.
 
 ### Usage:
-1. Plug the Kinect xbox 360 device into the USB port.
-2. Install the latest Freenect driver.
-3. Install OpenCV 2.x
-4. Set path for include directory and lib directory.
-5. Build and run.
-6. Mark joints with different colors.
-7. Perform actions.
-8. Press 'ESC' to exit.
+1. Install the latest Freenect driver.
+2. Install OpenCV 2.x
+3. Set path for include directory and lib directory.
+4. Mark joints with different colors.
+5. Plug the Kinect xbox 360 device into the USB port.
+6. Build and run.
+7. [Optional]Fine tune the colors.
+   Press 'l' key to switch the mode, 'Up' and 'Down' arrow key to change the color.
+8. Perform actions.
+9. Press 'esc' key to exit.
 
 ### To do:
-The hip center and the neck are difficult to mark colors.
+1. [Solved]The hip center and the neck are difficult to mark colors, consider to generate them automatically.
+2. The result is terrible due to the poor light source.

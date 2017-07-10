@@ -797,6 +797,18 @@ private:
             m_vJointsOrientation[i].pos.y = positions[1];
             m_vJointsOrientation[i].pos.z = positions[2];
         }
+        // Generate positions for hip center and neck.
+        for (int i = 0; i < static_cast<int>(m_vJointsOrientation.size() / JOINT_SIZE); i++) {
+            Joint* joints = &m_vJointsOrientation[i * JOINT_SIZE];
+
+            joints[JOINT_TORSO].pos.x = (joints[JOINT_LEFT_HIP].pos.x + joints[JOINT_RIGHT_HIP].pos.x) * 0.5f;
+            joints[JOINT_TORSO].pos.y = (joints[JOINT_LEFT_HIP].pos.y + joints[JOINT_RIGHT_HIP].pos.y) * 0.5f;
+            joints[JOINT_TORSO].pos.z = (joints[JOINT_LEFT_HIP].pos.z + joints[JOINT_RIGHT_HIP].pos.z) * 0.5f;
+
+            joints[JOINT_NECK].pos.x = (joints[JOINT_LEFT_SHOULDER].pos.x + joints[JOINT_RIGHT_SHOULDER].pos.x) * 0.5f;
+            joints[JOINT_NECK].pos.y = (joints[JOINT_LEFT_SHOULDER].pos.y + joints[JOINT_RIGHT_SHOULDER].pos.y) * 0.5f;
+            joints[JOINT_NECK].pos.z = (joints[JOINT_LEFT_SHOULDER].pos.z + joints[JOINT_RIGHT_SHOULDER].pos.z) * 0.5f;
+        }
     }
 };
 

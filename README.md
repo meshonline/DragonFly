@@ -19,16 +19,18 @@ You need to take a photo on the wrist bands under your light source, than write 
 
 Then you need to modify 'colortrack.h', find the function of 'mask_color_by_depth()', fill your colors into the color table.
 
-You can also fine tune the colors to fit your light source, but this step is optional.
+You can also fine tune the colors to fit the light source by the built-in color learning function.
+
+But this step is optional, if the light is coming from the camera's angle, it is not necessary to fine tune the colors.
 
 The project is far less mature at present, play around at your own risk.
 
 ### Features:
-1. Locate positions of all joints directly by color tracking.
-2. Global optimal solution for color tracking.
+1. Locate positions of joints directly by color tracking.
+2. Global optimal solution for color recognition.
 3. Mixture gaussian model for color learning.
 4. Turn around your body in the range of 360 degrees.
-5. Export motion capture data to 'BVH' format automatically.
+5. Export motion capture data to 'BVH' format.
 
 ### Support systems:
 1. macOS
@@ -47,4 +49,4 @@ The project is far less mature at present, play around at your own risk.
 9. Press 'Esc' key to exit.
 
 ### To do:
-The result is terrible due to poor light source.
+The result is poor due to dim light.

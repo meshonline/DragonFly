@@ -421,7 +421,7 @@ private:
             // The position of the root joint in centimeter, as the unit in Freenect is millimeter, we multiple it 0.1.
             Joint* joints = &m_vJointsOrientation[i * JOINT_SIZE];
             flux << joints[JOINT_TORSO].pos.x * SCALE * 0.1f << " " << joints[JOINT_TORSO].pos.y * SCALE * 0.1f << " "
-            << -joints[JOINT_TORSO].pos.z * SCALE * 0.1f << " ";
+            << joints[JOINT_TORSO].pos.z * SCALE * 0.1f << " ";
 
             // Write the Euler angle of every joint(ZYX).
             WriteJoint(flux, joints, JOINT_TORSO);
@@ -709,7 +709,7 @@ private:
             joints[JOINT_RIGHT_FOOT].quat = joints[JOINT_RIGHT_KNEE].quat;
         }
     }
-    // 恢复丢失的位置，中值滤波去抖动。
+    // Recover lost positions, apply median filter.
     void FilterPositions() {
         // slerp positions lack in confidence
         int last_tracked_indices[JOINT_SIZE];

@@ -413,11 +413,11 @@ void mask_color_by_depth(Mat& mat_color,
                     for (int j=0; j<static_cast<int>(color_group_table[joint_color[c]].size()); j++) {
                         // If the color match the color table.
                         if (hue_difference(h, color_group_table[joint_color[c]][j].mean_h, joint_color[c]) <
-                            color_group_table[joint_color[c]][j].standard_deviation_h * 2.0f &&
+                            color_group_table[joint_color[c]][j].standard_deviation_h * 3.0f &&
                             ABS(s - color_group_table[joint_color[c]][j].mean_s) <
-                            color_group_table[joint_color[c]][j].standard_deviation_s * 2.0f &&
+                            color_group_table[joint_color[c]][j].standard_deviation_s * 3.0f &&
                             ABS(v - color_group_table[joint_color[c]][j].mean_v) <
-                            color_group_table[joint_color[c]][j].standard_deviation_v * 2.0f) {
+                            color_group_table[joint_color[c]][j].standard_deviation_v * 3.0f) {
                             color_detected = true;
                             // We only need the match one of the color item in the color table.
                             break;

@@ -5,23 +5,23 @@ Kinect motion capture (Mocap) research project by color tracking.
 
 I'm studing how to use Kinect xbox 360 to achieve a low cost motion capture system.
 
-I use both color and depth information to locate the positions of joints.
+In this project, I use both color and depth information to locate the positions of joints.
 
-The algorithm does not use statistic method, so the positions of joints are accurate.
+The algorithm does not use statistic method, so the positions of joints are definite and accurate.
 
-I use wrist bands (13 colors) to mark colors for joints, they costed me only 5 dollars.
+I use inexpensive wrist bands (13 colors) to mark colors for joints, they only costed me less than five dollars.
 
 ![](wrist-bands.png)
 
 I recommend that you put the light source near the camera, and let it lighten your body from camera's angle.
 
-You need to take a photo on the wrist bands under your light source, than write down their hues, satuations and values, you may use gimp to get the information.
+You need to take a photo on the wrist bands under the light source, than write down their hues, satuations and values, you may use GIMP to get these information.
 
-Then you need to modify 'colortrack.h', find the function of 'mask_color_by_depth()', fill your colors into the color table.
+Then you need to modify 'colortrack.h', find the function of 'mask_color_by_depth()', fill the colors into the color table instead of mine.
 
 You can also fine tune the colors to fit the light source by the built-in color learning function.
 
-But this step is optional, if the light is coming from the camera's angle, it is not necessary to fine tune the colors.
+This step is optional, if the light is coming from the camera's angle, it is not necessary to fine tune the colors.
 
 The project is far less mature at present, play around at your own risk.
 
@@ -49,4 +49,4 @@ The project is far less mature at present, play around at your own risk.
 9. Press 'Esc' key to exit.
 
 ### To do:
-The result is poor due to dim light.
+[Solved]The result is poor in dim light.

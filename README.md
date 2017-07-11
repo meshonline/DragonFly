@@ -5,29 +5,29 @@ Kinect motion capture (Mocap) research project by color tracking.
 
 I'm studing how to use Kinect xbox 360 to achieve a low cost motion capture system.
 
-I use both color and depth information to locate the space positions of all joints.
+I use both color and depth information to locate the positions of joints.
 
-The algorithm does not use any statistic idea, so the positions of all joints are accurate.
+The algorithm does not use statistic method, so the positions of joints are accurate.
 
-I use wrist bands (13 colors) to mark colors for joints, they had only costed me five dollars.
+I use wrist bands (13 colors) to mark colors for joints, they costed me only 5 dollars.
 
 ![](wrist-bands.png)
 
-I recommend that you put the light source near the camera, and let it lighten your body from the camera's view.
+I recommend that you put the light source near the camera, and let it lighten your body from camera's angle.
 
-You must take a photo on these wrist bands, than write down their hues, satuations and values, you may use gimp to get the information.
+You need to take a photo on the wrist bands under your light source, than write down their hues, satuations and values, you may use gimp to get the information.
 
-Then you must modify 'colortrack.h', fill your colors into the color table manually.
+Then you need to modify 'colortrack.h', find the function of 'mask_color_by_depth()', fill your colors into the color table.
 
-To fine tune the colors to fit your light source, you can use the built-in color learning function to fine tune the colors.
+You can also fine tune the colors to fit your light source, but this step is optional.
 
-The project is not mature at present, play it around at your own risk.
+The project is far less mature at present, play around at your own risk.
 
 ### Features:
 1. Locate positions of all joints directly by color tracking.
 2. Global optimal solution for color tracking.
 3. Mixture gaussian model for color learning.
-4. Freely turn around your body in 360 degrees.
+4. Turn around your body in the range of 360 degrees.
 5. Export motion capture data to 'BVH' format automatically.
 
 ### Support systems:
@@ -36,16 +36,15 @@ The project is not mature at present, play it around at your own risk.
 3. Windows.
 
 ### Usage:
-1. Install the latest Freenect driver.
-2. Install OpenCV 2.x
-3. Set path for include directory and lib directory.
-4. Mark joints with different colors.
-5. Plug the Kinect xbox 360 device into the USB port.
-6. Build and run.
-7. [Optional]Fine tune the colors. Press 'l' key to switch the mode, 'Up' and 'Down' arrow keys to change the color.
+1. Install latest [libfreenect driver](https://github.com/OpenKinect/libfreenect/).
+2. Install OpenCV 2.4.12
+3. Mark joints with different colors.
+4. Plug the Kinect xbox 360 device into the USB port.
+5. Set path for include directory and lib directory.
+6. Fill in the color table via modifying the source code.
+7. Build and run.
 8. Perform actions.
 9. Press 'Esc' key to exit.
 
 ### To do:
-1. [Solved]The hip center and the neck are difficult to mark colors, consider to generate them automatically.
-2. The result is terrible due to the poor light source.
+The result is terrible due to poor light source.

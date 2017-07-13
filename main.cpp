@@ -42,6 +42,8 @@ int main(int argc, const char* argv[]) {
     // Generate T pose skeleton.
     m_pKinectBVH->CalibrateSkeleton();
     
+    bool snap_mode = false;
+    int snap_counter = 150;
     bool learn_mode = false;
     int learn_color = COLOR_SIZE / 2;
     vector<Vec3> color_list;
@@ -75,6 +77,11 @@ int main(int argc, const char* argv[]) {
                     learn_color = COLOR_SIZE - 1;
                 cout << "learn color: " << ColorName[learn_color] << endl;
             }
+        }
+        // Press ‘s’ to switch to snap shot mode.
+        if (!snap_mode && key == 's') {
+            snap_mode = true;
+            cout << "Snap mode" << endl;
         }
         
         // Grab the color frame.
@@ -129,6 +136,21 @@ int main(int argc, const char* argv[]) {
                     // Prepare for the next color learning.
                     color_list.clear();
                 }
+            }
+        }
+        
+        if (snap_mode) {
+            // Time elapsed.
+            snap_counter--;
+            cout << snap_counter << endl;
+            // Time out.
+            if (snap_counter <= 0) {
+                // Save the screen shot.
+                imwrite("snap_shot.png", mat_color);
+                // Reset snap counter.
+                snap_counter = 150;
+                snap_mode = false;
+                cout << "Work mode" << endl;
             }
         }
         

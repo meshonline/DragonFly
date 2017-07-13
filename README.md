@@ -11,6 +11,10 @@ The algorithm does not use statistic method, so the positions of joints are defi
 
 I use inexpensive wrist bands (13 colors) to mark colors for joints, they only costed me less than five dollars.
 
+But I found that my clothes are white, so I use a piece of brown non-woven fabric to instead the white wrist band finally.
+
+Non-woven fabrics have more colors than wrist bands, and they are cheaper than wrist bands, but they are lack of elastic.
+
 ![](wrist-bands.png)
 
 I recommend that you put the light source near the camera, and let it lighten your body from camera's angle.
@@ -22,6 +26,8 @@ Then you need to modify 'colortrack.h', find the function of 'mask_color_by_dept
 You can also fine tune the colors to fit the light source by the built-in color learning function.
 
 This step is optional, if the light is coming from the camera's angle, it is not necessary to fine tune the colors.
+
+If you'd like to fine tune the colors, remove all the contents in hsv_learn.txt, generate your data instead of mine.
 
 The project is far less mature at present, play around at your own risk.
 

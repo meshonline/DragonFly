@@ -53,6 +53,7 @@ typedef enum {
     COLOR_LIGHT_PINK,
     COLOR_DARK_RED,
     COLOR_RED,
+    COLOR_BROWN,
     COLOR_SIZE
 } ColorType;
 
@@ -70,6 +71,7 @@ static const char* ColorName[] = {
     "COLOR_LIGHT_PINK",
     "COLOR_DARK_RED",
     "COLOR_RED",
+    "COLOR_BROWN",
     "COLOR_SIZE"
 };
 
@@ -357,14 +359,15 @@ void mask_color_by_depth(Mat& mat_color,
         color_table[COLOR_LIGHT_PINK] = {335.0f, 0.46f, 0.88f};
         color_table[COLOR_DARK_RED] = {339.0f, 0.92f, 0.52f};
         color_table[COLOR_RED] = {358.0f, 0.93f, 0.55f};
+        color_table[COLOR_BROWN] = {19.0f, 0.72f, 0.33f};
         
         // Assign color to each joint.
         joint_color[JOINT_HEAD] = COLOR_BLACK;
         joint_color[JOINT_NECK] = COLOR_SIZE;
         joint_color[JOINT_LEFT_SHOULDER] = COLOR_GRAY;
-        joint_color[JOINT_RIGHT_SHOULDER] = COLOR_WHITE;
+        joint_color[JOINT_RIGHT_SHOULDER] = COLOR_YELLOW;
         joint_color[JOINT_LEFT_ELBOW] = COLOR_ORANGE;
-        joint_color[JOINT_RIGHT_ELBOW] = COLOR_YELLOW;
+        joint_color[JOINT_RIGHT_ELBOW] = COLOR_BROWN;
         joint_color[JOINT_LEFT_HAND] = COLOR_LIGHT_GREEN;
         joint_color[JOINT_RIGHT_HAND] = COLOR_GREEN;
         joint_color[JOINT_TORSO] = COLOR_SIZE;

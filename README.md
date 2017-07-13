@@ -25,6 +25,8 @@ This step is optional, if the light is coming from the camera's angle, it is not
 
 The project is far less mature at present, play around at your own risk.
 
+![](snap_shot.png)
+
 ### Features:
 1. Locate positions of joints directly by color tracking.
 2. Global optimal solution for color recognition.

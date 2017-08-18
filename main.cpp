@@ -68,7 +68,7 @@ int main(int argc, const char* argv[]) {
                 // Save the screen shot.
                 imwrite("snap_shot.png", mat_color);
                 // Reset snap counter.
-                snap_counter = 150;
+                snap_counter = 300;
                 snap_mode = false;
                 cout << "Work mode" << endl;
             }

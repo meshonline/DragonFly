@@ -31,69 +31,19 @@ int main(int argc, const char* argv[]) {
     memcpy(background_buffer, data, sizeof(uint16_t) * 480 * 640);
     // Pack background buffer to matrix.
     Mat mat_background(480, 640, CV_16UC1, background_buffer);
-    // If using small screen, shrink the matrix.
-    if (QVGA) {
-        resize(mat_background, mat_background, Size(320, 240));
-    }
-    
-    // Create a motion capture.
-    KinectBVH* m_pKinectBVH = new KinectBVH();
-    
-    // Generate T pose skeleton.
-    m_pKinectBVH->CalibrateSkeleton();
     
     bool snap_mode = false;
-    int snap_counter = 150;
-    bool learn_mode = false;
-    int learn_color = COLOR_SIZE / 2;
-    vector<Vec3> color_list;
+    int snap_counter = 300;
+    unsigned long counter = 0l;
+    Color_Tracker color_tracker;
+    ofstream fout(".temp_star_point");
     while (true) {
-        int key = waitKey(1);
-        
-        // Press 'ESC' to quit.
-        if (key == 27) {
-            break;
-        }
-        // Press ‘l’ to switch to color learning mode.
-        if (key == 'l') {
-            learn_mode = !learn_mode;
-            if (learn_mode) {
-                cout << "Learn mode" << endl;
-            } else {
-                cout << "Work mode" << endl;
-            }
-        }
-        // Press 'Up' and 'Down' to alter the color.
-        if (learn_mode) {
-            if (key == 63232) {
-                learn_color++;
-                if (learn_color == COLOR_SIZE)
-                    learn_color = 0;
-                cout << "learn color: " << ColorName[learn_color] << endl;
-            }
-            if (key == 63233) {
-                learn_color--;
-                if (learn_color == -1)
-                    learn_color = COLOR_SIZE - 1;
-                cout << "learn color: " << ColorName[learn_color] << endl;
-            }
-        }
-        // Press ‘s’ to switch to snap shot mode.
-        if (!snap_mode && key == 's') {
-            snap_mode = true;
-            cout << "Snap mode" << endl;
-        }
-        
         // Grab the color frame.
         freenect_sync_get_video(&data, &timestamp, 0, FREENECT_VIDEO_RGB);
         // Pack the data to matrix.
         Mat mat_color(480, 640, CV_8UC3, data);
         // Smooth the image.
         blur(mat_color, mat_color, Size(3, 3));
-        // If using small screen, shrink the matrix.
-        if (QVGA) {
-            resize(mat_color, mat_color, Size(320, 240));
-        }
         // Convert to BGR format.
         cvtColor(mat_color, mat_color, CV_RGB2BGR);
         
@@ -101,44 +51,14 @@ int main(int argc, const char* argv[]) {
         freenect_sync_get_depth(&data, &timestamp, 0, FREENECT_DEPTH_REGISTERED);
         // Pack the data to matrix.
         Mat mat_depth(480, 640, CV_16UC1, data);
-        // If using small screen, shrink the matrix.
-        if (QVGA) {
-            resize(mat_depth, mat_depth, Size(320, 240));
+        
+        // Work mode
+        if (!snap_mode) {
+            // Generate star points for all joints.
+            color_tracker.generate_star_points(mat_color, mat_depth, mat_background, fout);
+            counter++;
         }
-        
-        // Define a set of joints.
-        vector<Joint> joints(JOINT_SIZE);
-        
-        if (!learn_mode) {
-            // Calculate the positions of all joints.
-            mask_color_by_depth(mat_color, mat_depth, mat_background, joints);
-        } else {
-            // Color learning.
-            int hand_x = 0;
-            int hand_y = 0;
-            mask_color_by_depth(mat_color, mat_depth, mat_background, joints,
-                                (ColorType)learn_color, &hand_x, &hand_y);
-            // If detected the color.
-            if (hand_x != 0 && hand_y != 0) {
-                uchar* ptr_hand_color = mat_color.ptr(hand_y) + 3 * hand_x;
-                Vec3 one_color;
-                bgr_to_hsv(ptr_hand_color[0], ptr_hand_color[1], ptr_hand_color[2],
-                           one_color.x, one_color.y, one_color.z);
-                color_list.push_back(one_color);
-                // Anylasis data of about one minute(66.7 seconds).
-                if (color_list.size() == 2000) {
-                    // Do color learning.
-                    machine_learning(color_list,
-                                     0.5f,
-                                     0.05f,
-                                     (ColorType)learn_color,
-                                     "hsv_learn.txt");
-                    // Prepare for the next color learning.
-                    color_list.clear();
-                }
-            }
-        }
-        
+        // Snap mode
         if (snap_mode) {
             // Time elapsed.
             snap_counter--;
@@ -154,30 +74,67 @@ int main(int argc, const char* argv[]) {
             }
         }
         
-        // Add the positions of all joints.
-        m_pKinectBVH->AddAllJointsPosition(&joints[0]);
-        
-        // Increase the frame number.
-        m_pKinectBVH->IncrementNbFrames();
-        
         // Show the image.
         imshow("rgb", mat_color);
+        
+        int key = waitKey(1);
+        
+        // Press 'ESC' to quit.
+        if (key == 27) {
+            break;
+        }
+        // Press ‘s’ to switch to snap shot mode.
+        if (key == 's') {
+            snap_mode = !snap_mode;
+            if (snap_mode) {
+                cout << "Snap mode" << endl;
+            } else {
+                cout << "Work mode" << endl;
+            }
+        }
+    }
+    fout.close();
+    
+    if (!snap_mode) {
+        // Create a motion capture.
+        KinectBVH kinect_bvh;
+        
+        // Generate T pose skeleton.
+        kinect_bvh.CalibrateSkeleton();
+        
+        ifstream fin(".temp_star_point");
+        while (counter > 0) {
+            // Define a set of joints.
+            vector<Joint> joints(JOINT_SIZE);
+            
+            // Calculate the positions of all joints.
+            color_tracker.process_star_points(joints, fin);
+            counter--;
+            if (counter % 30 == 0) {
+                cout << counter/30 << endl;
+            }
+            
+            // Add the positions of all joints.
+            kinect_bvh.AddAllJointsPosition(&joints[0]);
+            
+            // Increase the frame number.
+            kinect_bvh.IncrementNbFrames();
+        }
+        fin.close();
+        
+        // Generate filename with current time.
+        time_t nowtime = time(NULL);
+        struct tm* local = localtime(&nowtime);
+        char buf[256];
+        sprintf(buf, "%d-%d-%d-%d-%d-%d.bvh",
+                local->tm_year + 1900, local->tm_mon + 1, local->tm_mday,
+                local->tm_hour, local->tm_min, local->tm_sec);
+        
+        // Save the motion capture data to bvh file.
+        kinect_bvh.SaveToBVHFile(buf);
     }
     
-    // Generate filename with current time.
-    time_t nowtime = time(NULL);
-    struct tm* local = localtime(&nowtime);
-    char buf[256];
-    sprintf(buf, "%d-%d-%d-%d-%d-%d.bvh",
-            local->tm_year + 1900, local->tm_mon + 1, local->tm_mday,
-            local->tm_hour, local->tm_min, local->tm_sec);
-    
-    // Save the motion capture data to bvh file.
-    m_pKinectBVH->SaveToBVHFile(buf);
-    
-    // Clean the motion capture.
-    delete m_pKinectBVH;
-    m_pKinectBVH = NULL;
+    unlink(".temp_star_point");
     
     // Clean the background buffer.
     delete[] background_buffer;

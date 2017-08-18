@@ -180,7 +180,7 @@ public:
         m_pFile.open(filename.c_str());
         if (m_pFile.is_open()) {
             FilterPositions();
-            CorrectAngle(5.0f);
+            CorrectAngle(12.5f);
             CreateQuaternionInformation();
             CreateSkeletonInformation();
             CreateMotionInformation();

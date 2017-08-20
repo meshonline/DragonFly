@@ -11,6 +11,7 @@
 #include <vector>
 #include <map>
 #include "vec_math.h"
+#include "catmull_rom.h"
 
 using namespace std;
 using namespace Vec_Math;
@@ -187,7 +188,7 @@ public:
             m_pFile.close();
         }
     }
-
+    
 private:
     // Frame counter.
     int m_nbFrame;
@@ -215,7 +216,7 @@ private:
         flux << angles.z * kRadToDeg << " " << angles.y * kRadToDeg << " "
         << angles.x * kRadToDeg << " ";
     }
-
+    
     // Calculate the Euler angle of joint's relative rotation to its parent.
     Vec3 GetEulers(const Joint* joints, const int idx) {
         // Get the quaternion of its parent.
@@ -408,7 +409,7 @@ private:
         
         m_pFile << flux.str();
     }
-
+    
     // Generate motion capture data and save to file.
     void CreateMotionInformation() {
         stringstream flux;
@@ -422,7 +423,7 @@ private:
             Joint* joints = &m_vJointsOrientation[i * JOINT_SIZE];
             flux << joints[JOINT_TORSO].pos.x * SCALE * 0.1f << " " << joints[JOINT_TORSO].pos.y * SCALE * 0.1f << " "
             << joints[JOINT_TORSO].pos.z * SCALE * 0.1f << " ";
-
+            
             // Write the Euler angle of every joint(ZYX).
             WriteJoint(flux, joints, JOINT_TORSO);
             WriteJoint(flux, joints, JOINT_NECK);
@@ -445,7 +446,7 @@ private:
         
         m_pFile << flux.str();
     }
-
+    
     // Correct the pitch angle of the camera.
     void CorrectAngle(const float& kinect_angle) {
         // Calculate the invert rotation matrix.
@@ -456,7 +457,7 @@ private:
             m_vJointsOrientation[i].pos = mat3_mul_vector(m_vJointsOrientation[i].pos, correct_matrix);
         }
     }
-
+    
     // Generate quaternions for a set of joints.
     void CreateQuaternionInformation() {
         // If the arms are not standard 'T' pose, you may set an offset angle.
@@ -734,16 +735,37 @@ private:
                     // lerp lost positions
                     int last_tracked_index = last_tracked_indices[j];
                     int current_tracked_index = index;
+                    // start point and end point
                     Vec3 p1 = m_vJointsOrientation[last_tracked_index].pos;
                     Vec3 p2 = m_vJointsOrientation[current_tracked_index].pos;
-                    
-                    for (int k = last_tracked_index + JOINT_SIZE;
-                         k < current_tracked_index; k += JOINT_SIZE) {
-                        float t = (float)(k - last_tracked_index) /
-                        (current_tracked_index - last_tracked_index);
-                        m_vJointsOrientation[k].pos.x = p1.x * (1.0f - t) + p2.x * t;
-                        m_vJointsOrientation[k].pos.y = p1.y * (1.0f - t) + p2.y * t;
-                        m_vJointsOrientation[k].pos.z = p1.z * (1.0f - t) + p2.z * t;
+
+                    // test if we can use better catmull-rom algorithm, otherwise we use stable linear algorithm.
+                    int cat_head_index = last_tracked_index - JOINT_SIZE * 2;
+                    int cat_tail_index = current_tracked_index + JOINT_SIZE * 2;
+                    bool catmull_rom = (cat_head_index >= 0 &&
+                                            m_vJointsOrientation[cat_head_index].tracked &&
+                                            cat_tail_index < static_cast<int>(m_vJointsOrientation.size()) &&
+                                            m_vJointsOrientation[cat_tail_index].tracked);
+                    if (catmull_rom) {
+                        Vec3 p0 = m_vJointsOrientation[cat_head_index].pos;
+                        Vec3 p3 = m_vJointsOrientation[cat_tail_index].pos;
+                        CubicPoly px, py, pz;
+                        InitCentripetalCR(p0, p1, p2, p3,
+                                          2.0f, (float)(current_tracked_index - last_tracked_index) / JOINT_SIZE, 2.0f,
+                                          px, py, pz);
+                        for (int k = last_tracked_index + JOINT_SIZE; k < current_tracked_index; k += JOINT_SIZE) {
+                            float t = (float)(k - last_tracked_index) / (current_tracked_index - last_tracked_index);
+                            m_vJointsOrientation[k].pos.x = px.eval(t);
+                            m_vJointsOrientation[k].pos.y = py.eval(t);
+                            m_vJointsOrientation[k].pos.z = pz.eval(t);
+                        }
+                    } else {
+                        for (int k = last_tracked_index + JOINT_SIZE; k < current_tracked_index; k += JOINT_SIZE) {
+                            float t = (float)(k - last_tracked_index) / (current_tracked_index - last_tracked_index);
+                            m_vJointsOrientation[k].pos.x = p1.x * (1.0f - t) + p2.x * t;
+                            m_vJointsOrientation[k].pos.y = p1.y * (1.0f - t) + p2.y * t;
+                            m_vJointsOrientation[k].pos.z = p1.z * (1.0f - t) + p2.z * t;
+                        }
                     }
                 }
                 // when tracked, save track index and status
@@ -796,18 +818,6 @@ private:
             m_vJointsOrientation[i].pos.x = positions[0];
             m_vJointsOrientation[i].pos.y = positions[1];
             m_vJointsOrientation[i].pos.z = positions[2];
-        }
-        // Generate positions for hip center and neck.
-        for (int i = 0; i < static_cast<int>(m_vJointsOrientation.size() / JOINT_SIZE); i++) {
-            Joint* joints = &m_vJointsOrientation[i * JOINT_SIZE];
-
-            joints[JOINT_TORSO].pos.x = (joints[JOINT_LEFT_HIP].pos.x + joints[JOINT_RIGHT_HIP].pos.x) * 0.5f;
-            joints[JOINT_TORSO].pos.y = (joints[JOINT_LEFT_HIP].pos.y + joints[JOINT_RIGHT_HIP].pos.y) * 0.5f;
-            joints[JOINT_TORSO].pos.z = (joints[JOINT_LEFT_HIP].pos.z + joints[JOINT_RIGHT_HIP].pos.z) * 0.5f;
-
-            joints[JOINT_NECK].pos.x = (joints[JOINT_LEFT_SHOULDER].pos.x + joints[JOINT_RIGHT_SHOULDER].pos.x) * 0.5f;
-            joints[JOINT_NECK].pos.y = (joints[JOINT_LEFT_SHOULDER].pos.y + joints[JOINT_RIGHT_SHOULDER].pos.y) * 0.5f;
-            joints[JOINT_NECK].pos.z = (joints[JOINT_LEFT_SHOULDER].pos.z + joints[JOINT_RIGHT_SHOULDER].pos.z) * 0.5f;
         }
     }
 };

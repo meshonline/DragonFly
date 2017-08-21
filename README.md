@@ -23,7 +23,7 @@ You need to take a photo on the wrist bands under the light source, than write d
 
 Then you need to modify 'colortrack.h', find the function of 'Color_Tracker()', fill the colors into the color table instead of mine.
 
-The project is almost mature, play it around for fun.
+The project is not mature enough, play it around at your own risk.
 
 ![](snap_shot_upload.png)
 
